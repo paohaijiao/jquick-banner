@@ -6,6 +6,7 @@ import com.github.paohaijiao.console.JConsole;
 
 public class JQuickBannerImpl implements JQuickBanner {
 
+
     JQuickBannerConfig config=new JQuickBannerConfig();
 
     private JConsole console=new JConsole();
