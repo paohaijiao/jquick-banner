@@ -4,6 +4,8 @@ import com.github.paohaijiao.banner.JQuickBanner;
 import com.github.paohaijiao.config.JQuickBannerConfig;
 import com.github.paohaijiao.console.JConsole;
 
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JQuickBannerImpl implements JQuickBanner {
@@ -45,7 +47,29 @@ public class JQuickBannerImpl implements JQuickBanner {
     public void setConfig(JQuickBannerConfig config) {
         this.config = config;
     }
+    public static JQuickBannerConfig loadFromProperties() {
 
+        try (InputStream input = JQuickBannerConfig.class
+                .getClassLoader()
+                .getResourceAsStream("jquick-banner.properties")) {
+            if (input != null) {
+                JQuickBannerConfig config = new JQuickBannerConfig();
+                Properties props = new Properties();
+                props.load(input);
+                config.setEnabled(Boolean.parseBoolean(props.getProperty("jquick.banner.enabled", "true")));
+                config.setVersion(props.getProperty("jquick.banner.version", config.getVersion()));
+                config.setAuthor(props.getProperty("jquick.banner.author", config.getAuthor()));
+                config.setGithub(props.getProperty("jquick.banner.github", config.getGithub()));
+                config.setEmail(props.getProperty("jquick.banner.email", config.getEmail()));
+                config.setProjectName(props.getProperty("jquick.banner.project", config.getProjectName()));
+                config.setSlogan(props.getProperty("jquick.banner.slogan", config.getSlogan()));
+                return config;
+            }
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
     @Override
     public void printBanner( ) {
         if(!config.isEnabled()){
@@ -55,6 +79,16 @@ public class JQuickBannerImpl implements JQuickBanner {
             console.warn("⚠️ Banner has already been printed, skipping...");
             return;
         }
+        JQuickBannerConfig configFromClassPathFile=loadFromProperties();
+        if (configFromClassPathFile != null) {
+            config=configFromClassPathFile;
+        }
+        String version = config.getVersion() != null ? config.getVersion() : "1.0.0";
+        String author = config.getAuthor() != null ? config.getAuthor() : "泡海椒";
+        String github = config.getGithub() != null ? config.getGithub() : "@paohaijiao";
+        String email = config.getEmail() != null ? config.getEmail() : "goudingcheng@gmail.com";
+        String projectName = config.getProjectName() != null ? config.getProjectName() : "JQUICK";
+        String slogan = config.getSlogan() != null ? config.getSlogan() : "极速·简洁·现代";
         console.info("╔════════════════════════════════════════════════════════════════════╗");
         console.info("║                                                                    ║");
         console.info("║          ██╗   ██████╗ ██╗   ██╗██╗ ██████╗██╗  ██╗                ║");
@@ -64,16 +98,16 @@ public class JQuickBannerImpl implements JQuickBanner {
         console.info("║     ███████╗ ╚██████╔╝╚██████╔╝ ██║╚██████╗██║  ██╗                ║");
         console.info("║     ╚══════╝  ╚══▀▀═╝  ╚═════╝  ╚═╝ ╚═════╝╚═╝  ╚═╝                ║");
         console.info("║                                                                    ║");
-        console.info("║              ⚡  JQUICK - 极速·简洁·现代  ⚡                           ║");
+        console.info("║              ⚡  " + projectName + " - " + slogan + "  ⚡                           ║");
         console.info("║                                                                    ║");
-        console.info("║     Version: 1.0.0          License: Apache 2.0                    ║");
-        console.info("║     Author:  泡海椒          GitHub: @paohaijiao                    ║");
-        console.info("║     Email:   goudingcheng@gmail.com                                ║");
+        console.info("║     Version: " + version + "          License: Apache 2.0                    ║");
+        console.info("║     Author:  " + author + "          GitHub: " + github + "                    ║");
+        console.info("║     Email:   " + email + "                                ║");
         console.info("║     Star  us on GitHub!                                            ║");
-        console.info("║     🚀 JQUICK Runtime Environment Initialized!                     ║");
+        console.info("║     🚀 " + projectName + " Runtime Environment Initialized!                     ║");
         console.info("║                                                                    ║");
         console.info("╚════════════════════════════════════════════════════════════════════╝");
-        console.debug("✓ JQUICK Runtime Environment initialized successfully!");
+        console.debug("✓ " + projectName + " Runtime Environment initialized successfully!");
         console.info(" ⚡ Ready to rock!");
         console.warn("⭐ Don't forget to star us: https://github.com/paohaijiao\n");
     }
