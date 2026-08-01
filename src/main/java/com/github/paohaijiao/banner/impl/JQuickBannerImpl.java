@@ -4,21 +4,43 @@ import com.github.paohaijiao.banner.JQuickBanner;
 import com.github.paohaijiao.config.JQuickBannerConfig;
 import com.github.paohaijiao.console.JConsole;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class JQuickBannerImpl implements JQuickBanner {
 
+    private static volatile JQuickBannerImpl instance;
 
-    private static final JQuickBannerImpl INSTANCE = new JQuickBannerImpl();
 
     private JQuickBannerConfig config;
 
     private JConsole console = new JConsole();
+
+    private AtomicBoolean executed = new AtomicBoolean(false);
+
 
     private JQuickBannerImpl() {
         this.config = new JQuickBannerConfig();
     }
 
     public static JQuickBannerImpl getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            synchronized (JQuickBannerImpl.class) {
+                if (instance == null) {
+                    instance = new JQuickBannerImpl();
+                }
+            }
+        }
+        return instance;
+    }
+    public static JQuickBannerImpl getInstance(JQuickBannerConfig config) {
+        if (instance == null) {
+            synchronized (JQuickBannerImpl.class) {
+                if (instance == null) {
+                    instance = new JQuickBannerImpl();
+                }
+            }
+        }
+        return instance;
     }
     public void setConfig(JQuickBannerConfig config) {
         this.config = config;
@@ -27,6 +49,10 @@ public class JQuickBannerImpl implements JQuickBanner {
     @Override
     public void printBanner( ) {
         if(!config.isEnabled()){
+            return;
+        }
+        if (!executed.compareAndSet(false, true)) {
+            console.warn("⚠️ Banner has already been printed, skipping...");
             return;
         }
         console.info("╔════════════════════════════════════════════════════════════════════╗");
@@ -51,9 +77,13 @@ public class JQuickBannerImpl implements JQuickBanner {
         console.info(" ⚡ Ready to rock!");
         console.warn("⭐ Don't forget to star us: https://github.com/paohaijiao\n");
     }
-
+    public void reset() {
+        executed.set(false);
+    }
     public static void main(String[] args) {
         JQuickBanner banner=JQuickBannerImpl.getInstance();
+        banner.printBanner();
+        banner.printBanner();
         banner.printBanner();
     }
 }
