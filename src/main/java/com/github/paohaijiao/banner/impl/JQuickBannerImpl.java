@@ -7,12 +7,21 @@ import com.github.paohaijiao.console.JConsole;
 public class JQuickBannerImpl implements JQuickBanner {
 
 
-    JQuickBannerConfig config=new JQuickBannerConfig();
+    private static final JQuickBannerImpl INSTANCE = new JQuickBannerImpl();
 
-    private JConsole console=new JConsole();
+    private JQuickBannerConfig config;
 
-    public JQuickBannerImpl(JQuickBannerConfig config){
-        this.config=config;
+    private JConsole console = new JConsole();
+
+    private JQuickBannerImpl() {
+        this.config = new JQuickBannerConfig();
+    }
+
+    public static JQuickBannerImpl getInstance() {
+        return INSTANCE;
+    }
+    public void setConfig(JQuickBannerConfig config) {
+        this.config = config;
     }
 
     @Override
@@ -44,8 +53,7 @@ public class JQuickBannerImpl implements JQuickBanner {
     }
 
     public static void main(String[] args) {
-        JQuickBannerConfig config=new JQuickBannerConfig();
-        JQuickBanner banner=new JQuickBannerImpl(config);
+        JQuickBanner banner=JQuickBannerImpl.getInstance();
         banner.printBanner();
     }
 }
