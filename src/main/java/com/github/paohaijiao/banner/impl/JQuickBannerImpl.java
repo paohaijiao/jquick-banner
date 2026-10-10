@@ -135,7 +135,7 @@ public class JQuickBannerImpl implements JQuickBanner {
 
         console.debug("✅ " + projectName + " Runtime Environment initialized successfully!");
         console.info("⚡ Ready to rock!");
-        console.warn("⭐ Don't forget to star us: " + url + "\n");
+        console.warn("⭐ Don't forget to star us: " + githubUrl + "\n");
     }
 
     public void reset() {
