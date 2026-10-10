@@ -9,7 +9,7 @@ public class JQuickBannerConfig {
 
     private String version = "1.0.0";
 
-    private String author = "泡海椒";
+    private String author = "paohaijiao";
 
     private String github = "@paohaijiao";
 
@@ -17,5 +17,9 @@ public class JQuickBannerConfig {
 
     private String projectName = "JQUICK";
 
-    private String slogan = "极速·简洁·现代";
+    private String slogan = "Fast · Simple · Modern";
+
+    private String url = "https://www.jquick.org/";
+
+    private String githubUrl = "https://github.com/paohaijiao";
 }
