@@ -70,6 +70,7 @@ public class JQuickBannerImpl implements JQuickBanner {
                 config.setProjectName(props.getProperty("jquick.banner.project", config.getProjectName()));
                 config.setSlogan(props.getProperty("jquick.banner.slogan", config.getSlogan()));
                 config.setUrl(props.getProperty("jquick.banner.url", config.getUrl()));
+                config.setGithubUrl(props.getProperty("jquick.banner.githubUrl", config.getGithubUrl()));
                 return config;
             }
         } catch (Exception e) {
@@ -80,19 +81,13 @@ public class JQuickBannerImpl implements JQuickBanner {
 
     @Override
     public void printBanner() {
-        if (!config.isEnabled()) {
-            return;
-        }
-        if (!executed.compareAndSet(false, true)) {
-            console.warn("⚠️ Banner has already been printed, skipping...");
-            return;
-        }
-
         JQuickBannerConfig configFromClassPathFile = loadFromProperties();
         if (configFromClassPathFile != null) {
             config = configFromClassPathFile;
         }
-
+        if (!config.isEnabled()) {
+            return;
+        }
         String version = config.getVersion() != null ? config.getVersion() : "1.0.0";
         String author = config.getAuthor() != null ? config.getAuthor() : "paohaijiao";
         String github = config.getGithub() != null ? config.getGithub() : "@paohaijiao";
@@ -101,7 +96,10 @@ public class JQuickBannerImpl implements JQuickBanner {
         String slogan = config.getSlogan() != null ? config.getSlogan() : "Fast · Simple · Modern";
         String url = config.getUrl() != null ? config.getUrl() : "https://www.jquick.org/";
         String githubUrl = config.getGithubUrl() != null ? config.getGithubUrl() : "https://github.com/paohaijiao";
-
+        if (!executed.compareAndSet(false, true)) {
+            console.warn("⚠️ Banner has already been printed, skipping...");
+            return;
+        }
         int innerWidth = 68;
         String top = "╔" + repeat("═", innerWidth) + "╗";
         String bottom = "╚" + repeat("═", innerWidth) + "╝";
